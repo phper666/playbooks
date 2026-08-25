@@ -24,6 +24,24 @@
 ### packaging/
 - [electron-crossplatform.md](packaging/electron-crossplatform.md) — Electron 三端打包（捆绑运行时 + 更新源一致性 + 平台 target）
 
+## Skills
+
+playbooks 可做成 **skills** 加载（`~/.config/opencode/skills/`），AI 遇到相关问题自动触发读取对应 playbook：
+
+| Skill | 触发场景 |
+|:---|:---|
+| [phper666-playbook-release](skills/phper666-playbook-release/) | 发版 / 版本管理 / semver 三档 / 版本线维护 / CI-CD 发布 |
+| [phper666-playbook-packaging](skills/phper666-playbook-packaging/) | Electron 打包 / 跨平台分发 / 自动更新配置 |
+
+安装方式（symlink 到 skills 目录，保持单一事实源）：
+
+```bash
+ln -s /Users/liyuzhao/AI/playbooks/skills/phper666-playbook-release ~/.config/opencode/skills/phper666-playbook-release
+ln -s /Users/liyuzhao/AI/playbooks/skills/phper666-playbook-packaging ~/.config/opencode/skills/phper666-playbook-packaging
+```
+
+> skill 内 playbook 文件是 symlink，指回本仓库根目录对应文件——内容更新，skill 同步。
+
 ## 如何贡献
 
 - 项目踩坑经验通用化后 → 按领域放对应目录
