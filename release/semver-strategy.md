@@ -15,6 +15,7 @@
 5. **并发锁按版本线分组**：同线串行、异线并行（主分支发 minor 与 release/0.1.x 发 patch 可同时跑）。
 6. **多端并行必须同分支**：多端并行各自 checkout 同一 branch，否则 mac 发 0.1.1、win 发 0.1.2 乱套。
 7. **自动更新项目旧线 patch 只对锁版用户有效**：自动更新机制通常指向最新版本，主分支已发 0.2.0 时旧线 0.1.1 不会推给自动更新用户。
+8. **CI 发布自动 push 回受保护分支需配置豁免**：bump job 用自动化账号（如 `github-actions[bot]`）直接 commit+tag+push 回发布分支——若该分支加分支保护/规则集（强制 PR 合并 / 状态检查），GITHUB_TOKEN 直接 push 会被拒，发布链断；需在规则集 Bypass list 加自动化账号（CI 发布是自动化流程应豁免），或 workflow 改用带写权限的专用 token（PAT）。
 
 > **注（GitHub Actions 写法）**：
 > - 并发锁：`concurrency.group: release-${{ inputs.branch }}`（同线串行、异线并行）
@@ -30,6 +31,7 @@
 4. **并发锁按版本线分组**：同线串行异线并行（`concurrency.group` / `resource_group` / 等价机制）。
 5. **多端必须同分支**：多端并行 checkout 同一 branch，防止版本漂移。
 6. **自动更新项目的旧线 patch 只服务锁版用户**：自动更新指向最新，旧线 patch 不推给自动更新用户。
+7. **CI 发布流水线自动 push 回受保护分支需配置豁免**：发版流水线自动 commit+tag+push 回发布分支时——无论主分支（发 minor/major 时 bump 版本）还是版本线维护分支（`release/x.y`，发 patch 时也要 push 回它）——只要该分支配置了分支保护（强制 PR 合并 / 强制状态检查 / 禁 force push），自动化账号的 push 就会被拒，发布链断。需在保护规则豁免 CI 发布账号（自动化发布流程应豁免强制 PR），或流水线用带写权限的专用 token。**排查清单**：加分支保护前，确认发布流程会自动 push 的**所有**分支（主分支 + 各版本线分支）都已配置豁免；tag 若被 tag 保护规则管，也要确认发布流程能打 tag。
 
 ## 适用范围
 
