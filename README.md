@@ -14,6 +14,7 @@
 | [debugging/](debugging/) | 排障经验 / 疑难问题 |
 | [workflow/](workflow/) | 工作流 / 流程方法 |
 | [templates/](templates/) | 可复用模板 |
+| [tools/](tools/) | 好用项目/工具登记（本地直接用，搭配 skills 但不被 skills 引入） |
 
 ## Playbook 索引
 
@@ -41,6 +42,14 @@ ln -s /Users/liyuzhao/AI/playbooks/skills/phper666-playbook-packaging ~/.config/
 ```
 
 > skill 内 playbook 文件是 symlink，指回本仓库根目录对应文件——内容更新，skill 同步。
+
+## Tools（好用项目/工具登记）
+
+本地直接用的好用项目/工具，搭配 skills 但不被 skills 直接引入（松耦合）。登记原则：**实测可用才登记**（防「描述好实际空」的工具）。
+
+| 工具 | 用途 | 本地位置 |
+|:---|:---|:---|
+| [archify](tools/archify.md) | 可验证的架构/流程/时序/数据流/状态机图生成（技术方案配图/流程可视化/架构文档） | `~/tools/archify/archify/` |
 
 ## 如何贡献
 
