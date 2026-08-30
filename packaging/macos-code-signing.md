@@ -14,7 +14,9 @@ macOS 自动更新安装器（Squirrel 类）以「运行中应用的代码签�
 4. **自签名证书「导入≠受信」**——p12 导入只落证书+私钥，不带信任；按有效身份过滤的检索结果为 0（报 CSSMERR_TP_NOT_TRUSTED），必须显式加入受信根（信任域）。
 5. **旧加密 p12 与新 OpenSSL 不兼容**——传统工具导出的 p12 常用 RC2-40-CBC 旧 PBE 加密，OpenSSL 3.x 默认 provider 拒解。证书已入钥匙串时直接用系统钥匙串工具导出，绕开 p12 内容解析。
 6. **钥匙串自动锁 + 身份检索路径**——新建钥匙串默认几分钟自动锁，长构建后半程签名时钥匙串已锁 → 搜身份返回空报 no identity found；且按名字解析身份走的是钥匙串 search list，仅靠命令行参数指定钥匙串不等价。
-7. **签名身份切换是单向门**——无签名/ad-hoc/证书 A 的存量用户，无法自更新到证书 B 签的版本（DR 指纹不可移植），全量手动重装。**证书即升级生命线**。
+7. **差分更新基失配 → 进度条假回退**——更新器用缓存根的上一次下载包作差分基，并假设它与运行版本同源；手动重装跨版本或安装失败换版本后基即失配 → 差分装配哈希必败 → **静默回退全量下载**，用户看到「进度条到 100% 又从头来」。失配缓存不会被自动清理，每次检查都重复。
+8. **更新器内部日志默认不可见**——内部日志走 console（打包环境丢弃），应用日志只剩 error 事件一条线；差分回退这类「设计内静默路径」完全不可观测，用户看到怪现象、日志无因。
+9. **签名身份切换是单向门**——无签名/ad-hoc/证书 A 的存量用户，无法自更新到证书 B 签的版本（DR 指纹不可移植），全量手动重装。**证书即升级生命线**。
 
 ## 通用原则
 
@@ -23,13 +25,16 @@ macOS 自动更新安装器（Squirrel 类）以「运行中应用的代码签�
 3. **证书是升级生命线**：签发证书丢失或更换 = 全量用户手动重装。证书文件 + 密码 + 注入方式必须异机备份并登记。
 4. **无证书 CI 签名流水线五步**：解码 secret → 建临时钥匙串（防自动锁 + 入 search list）→ 导入 → 显式受信 → 断言存在有效身份。证书导出用系统钥匙串工具（天然兼容旧加密），不依赖通用加密库解析 p12。
 5. **ad-hoc 只适合「本地能跑」，不适合「线上能更」**：要自动更新就用真证书（自签名或付费 Developer ID），不要用无身份签名过渡。
-6. **排障按报错分层定位**：NOT_TRUSTED = 受信缺失；no identity found = 钥匙串锁或 search list；静默跳签 = 门禁缺失；could not get code signature for running application = 存量版本无解（手动重装）。
+6. **排障按报错分层定位**：NOT_TRUSTED = 受信缺失；no identity found = 钥匙串锁或 search list；静默跳签 = 门禁缺失；could not get code signature for running application = 存量版本无解（手动重装）；**进度条假回退（到 100% 又重来）= 差分基失配**。
+7. **更新器日志必须接入应用日志**：差分回退、安装错误等「设计内静默路径」都要在应用日志可见（带来源前缀），否则排障全靠猜。
+8. **差分基缓存要对账**：下载成功时记录目标版本；启动对账——记录版本 ≠ 运行版本（或缺失/损坏）→ 清差分基缓存走一次全量重建，同源才保留。下载会话目录（有哈希自校验）不动，误清丢断点续传。
 
 > **注（electron-builder + GitHub Actions 写法）**：
 > - 门禁：`mac.forceCodeSigning: true`（应签未签=构建失败）；**不要**显式写 `identity`（会遮蔽 `CSC_LINK` 注入的证书，且显式路径不走门禁）
 > - 五步流水线（mac 腿专用 step）：`security create-keychain` + `set-keychain-settings -lut 21600`（防自动锁）+ `list-keychain -d user -s`（入 search list）→ `security import`（`-T /usr/bin/codesign` + `set-key-partition-list`）→ `security find-certificate -p` 导出证书 + `sudo security add-trusted-cert -d -r trustRoot`（显式受信）→ `security find-identity -v -p codesigning` 断言 1 valid
 > - 用 `CSC_KEYCHAIN` 指向准备好的钥匙串（打包器跳过自建临时钥匙串——其导入不带信任）；产物级门禁：`codesign --verify --deep --strict`
 > - 通用写法：任何「secret 注入签名材料 + 临时信任锚 + 产物验证」的流水线都遵循同一骨架，不绑 electron-builder
+> - 差分基对账（更新器侧）：下载成功写「目标版本」记录；启动对账，记录 ≠ 运行版本 → 清差分基文件（下次全量重建），下载会话目录不动
 
 ## 适用范围
 
@@ -37,4 +42,4 @@ macOS 桌面应用 + Squirrel 类自更新。无 Apple 开发者账号（自签�
 
 ## 来源
 
-出生：dsh-hull-desktop v0.1.4~v0.1.6 mac 签名/自更新排障（2026-08-29~30，四轮 CI 实测：静默跳签 → NOT_TRUSTED → RC2 拒解 → no identity found）。通用化：2026-08-30 迁入本仓库。
+出生：dsh-hull-desktop v0.1.4~v0.1.6 mac 签名/自更新排障（2026-08-29~30，四轮 CI 实测：静默跳签 → NOT_TRUSTED → RC2 拒解 → no identity found）；v0.1.6→v0.1.7 升级补差分假回退与日志观测两坑（2026-08-30）。通用化：2026-08-30 迁入本仓库。

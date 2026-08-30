@@ -21,10 +21,14 @@
 ### release/
 - [semver-strategy.md](release/semver-strategy.md) — semver 三档版本策略（幅度不是通道 + 版本线维护独立于档位）
 - [version-line-maintenance.md](release/version-line-maintenance.md) — 旧版本线维护（backport / EOL 决策独立）
+- [release-body-overwrite.md](release/release-body-overwrite.md) — CI 发版正文组装（后步覆盖前步 / 手动说明静默丢失 / 正文断言）
 
 ### packaging/
 - [electron-crossplatform.md](packaging/electron-crossplatform.md) — Electron 三端打包（捆绑运行时 + 更新源一致性 + 平台 target）
-- [macos-code-signing.md](packaging/macos-code-signing.md) — macOS 签名与自更新（自签名证书 CI 五步 + 签名门禁 + 报错分层排障 + 证书单向门）
+- [macos-code-signing.md](packaging/macos-code-signing.md) — macOS 签名与自更新（自签名证书 CI 五步 + 签名门禁 + 报错分层排障 + 差分假回退 + 证书单向门）
+
+### debugging/
+- [rerender-swallow-clicks.md](debugging/rerender-swallow-clicks.md) — 高频重渲染吞点击（按钮看得见点不动的排障 + 事件委托防御）
 
 ## Skills
 
@@ -32,7 +36,7 @@ playbooks 可做成 **skills** 加载（`~/.config/opencode/skills/`），AI 遇
 
 | Skill | 触发场景 |
 |:---|:---|
-| [phper666-playbook-release](skills/phper666-playbook-release/) | 发版 / 版本管理 / semver 三档 / 版本线维护 / CI-CD 发布 |
+| [phper666-playbook-release](skills/phper666-playbook-release/) | 发版 / 版本管理 / semver 三档 / 版本线维护 / CI-CD 发布 / 发版说明 |
 | [phper666-playbook-packaging](skills/phper666-playbook-packaging/) | Electron 打包 / 跨平台分发 / 自动更新配置 / macOS 签名与自更新 |
 
 安装方式（symlink 到 skills 目录，保持单一事实源）：
