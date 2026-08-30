@@ -24,8 +24,9 @@
 - [release-body-overwrite.md](release/release-body-overwrite.md) — CI 发版正文组装（后步覆盖前步 / 手动说明静默丢失 / 正文断言）
 
 ### packaging/
-- [electron-crossplatform.md](packaging/electron-crossplatform.md) — Electron 三端打包（捆绑运行时 + 更新源一致性 + 平台 target）
-- [macos-code-signing.md](packaging/macos-code-signing.md) — macOS 签名与自更新（自签名证书 CI 五步 + 签名门禁 + 报错分层排障 + 差分假回退 + 证书单向门）
+- [auto-update-onboarding.md](packaging/auto-update-onboarding.md) — **新项目自更新接入 runbook（从这开始）**：定方案 → 证书备份 → 打包 → CI 签名 → 更新器基线 → 正文纪律 → 首版冒烟
+- [electron-crossplatform.md](packaging/electron-crossplatform.md) — Electron 三端打包（捆绑运行时 + 更新源一致性 + 平台 target + 产物命名禁空格）
+- [macos-code-signing.md](packaging/macos-code-signing.md) — macOS 签名与自更新（自签名证书 CI 五步 + 签名门禁 + 报错分层排障 + 差分假回退 + 证书单向门 + Gatekeeper 天花板）
 
 ### debugging/
 - [rerender-swallow-clicks.md](debugging/rerender-swallow-clicks.md) — 高频重渲染吞点击（按钮看得见点不动的排障 + 事件委托防御）

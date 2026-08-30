@@ -7,8 +7,9 @@ description: Electron 三端打包 playbook。当用户做桌面应用打包 / �
 # Electron 三端打包 playbook
 
 ## 何时用
+- 新项目从零接入自更新链路（接入顺序见 runbook）
 - Electron 桌面壳三端（macOS/Windows/Linux）打包
-- 排查打包问题（更新源查错静默失败、平台 target 缺失、交叉编译、未签名警告）
+- 排查打包问题（更新源查错静默失败、平台 target 缺失、交叉编译、未签名警告、产物名 404）
 - macOS 签名与自更新（自签名证书 CI 流水线 / codesign 报错分层排障 / 无签名版本无法自更新 / 差分假回退进度条重来）
 
 ## 核心规则（详见 packaging/electron-crossplatform.md、packaging/macos-code-signing.md）
@@ -20,6 +21,7 @@ description: Electron 三端打包 playbook。当用户做桌面应用打包 / �
 6. 签名（macOS，详见 macos-code-signing.md）：构建成功≠签名成功，必须有产物级签名门禁；自签名证书 CI 五步（临时钥匙串防自动锁+入 search list → 导入 → 显式受信 → 断言有效身份）；证书即升级生命线，签名身份切换是单向门；差分基缓存对账（下载记版本，启动对账不一致清基）+ 更新器日志必须接入应用日志
 
 ## 读文件
+- 新项目接入（runbook，从这里开始）：`packaging/auto-update-onboarding.md`（本目录相对路径）
 - 完整规则：`packaging/electron-crossplatform.md`（本目录相对路径）
 - 签名专题：`packaging/macos-code-signing.md`（本目录相对路径）
 
