@@ -5,7 +5,7 @@
 ## 检索方式
 
 - 用户提到「发版/版本/semver/CI-CD 发布」→ `release/`
-- 用户提到「打包/跨平台/electron/分发」→ `packaging/`
+- 用户提到「打包/跨平台/electron/分发/签名/codesign/自签名/自更新报错」→ `packaging/`
 - 用户提到「架构/模块设计/技术选型」→ `architecture/`
 - 用户提到「排障/疑难/踩坑」→ `debugging/`
 - 用户提到「工作流/流程方法」→ `workflow/`

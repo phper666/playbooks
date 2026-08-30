@@ -1,0 +1,1 @@
+../../../packaging/macos-code-signing.md

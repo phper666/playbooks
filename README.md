@@ -24,6 +24,7 @@
 
 ### packaging/
 - [electron-crossplatform.md](packaging/electron-crossplatform.md) — Electron 三端打包（捆绑运行时 + 更新源一致性 + 平台 target）
+- [macos-code-signing.md](packaging/macos-code-signing.md) — macOS 签名与自更新（自签名证书 CI 五步 + 签名门禁 + 报错分层排障 + 证书单向门）
 
 ## Skills
 
@@ -32,7 +33,7 @@ playbooks 可做成 **skills** 加载（`~/.config/opencode/skills/`），AI 遇
 | Skill | 触发场景 |
 |:---|:---|
 | [phper666-playbook-release](skills/phper666-playbook-release/) | 发版 / 版本管理 / semver 三档 / 版本线维护 / CI-CD 发布 |
-| [phper666-playbook-packaging](skills/phper666-playbook-packaging/) | Electron 打包 / 跨平台分发 / 自动更新配置 |
+| [phper666-playbook-packaging](skills/phper666-playbook-packaging/) | Electron 打包 / 跨平台分发 / 自动更新配置 / macOS 签名与自更新 |
 
 安装方式（symlink 到 skills 目录，保持单一事实源）：
 
